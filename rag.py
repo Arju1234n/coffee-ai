@@ -1,7 +1,12 @@
 import os
 import json
-import numpy as np
 from typing import List, Dict, Any
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
 
 try:
     from google import genai
@@ -67,7 +72,7 @@ class CoffeeKnowledgeRAG:
 
     def _initialize_embeddings(self):
         """Generates embeddings for knowledge chunks using currently supported Google embedding model."""
-        if not self.chunks:
+        if not NUMPY_AVAILABLE or not self.chunks:
             return
 
         client = self._get_genai_client()
@@ -126,7 +131,7 @@ class CoffeeKnowledgeRAG:
             return self._fallback_menu_search(query)
 
         # 1. Vector Search
-        if len(self.embeddings) == len(self.chunks) and any(e is not None for e in self.embeddings):
+        if NUMPY_AVAILABLE and len(self.embeddings) == len(self.chunks) and any(e is not None for e in self.embeddings):
             client = self._get_genai_client()
             if client:
                 try:
