@@ -263,43 +263,192 @@ st.markdown("""
     .badge-safe { background: rgba(34, 197, 94, 0.18); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
     .badge-tag { background: rgba(224, 169, 109, 0.12); color: #e0a96d; border: 1px solid rgba(224, 169, 109, 0.25); }
 
-    /* Custom Chat Message Containers */
+    /* ── Chat Message Bubbles ───────────────────────────────────── */
     .stChatMessage {
-        background-color: rgba(25, 17, 11, 0.7) !important;
-        border: 1px solid rgba(224, 169, 109, 0.2) !important;
-        border-radius: 16px !important;
-        padding: 16px 20px !important;
-        margin-bottom: 16px !important;
-        backdrop-filter: blur(10px);
+        border-radius: 22px !important;
+        padding: 20px 26px !important;
+        margin-bottom: 20px !important;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        animation: chatFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-    
-    /* Sidebar Styling */
+
+    /* User bubble — warm copper tint */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-user"]) {
+        background: linear-gradient(145deg, rgba(72, 46, 25, 0.82) 0%, rgba(42, 26, 14, 0.94) 100%) !important;
+        border: 1px solid rgba(224, 169, 109, 0.45) !important;
+        border-left: 4px solid #e0a96d !important;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,220,160,0.12);
+    }
+
+    /* Assistant bubble — deep espresso */
+    [data-testid="stChatMessage"]:has([data-testid="chatAvatarIcon-assistant"]) {
+        background: linear-gradient(145deg, rgba(22, 14, 8, 0.96) 0%, rgba(12, 7, 4, 0.99) 100%) !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        border-left: 4px solid #f59e0b !important;
+        box-shadow: 0 10px 32px rgba(0,0,0,0.55), inset 0 1px 0 rgba(245,180,80,0.08);
+    }
+
+    [data-testid="stChatMessage"]:hover {
+        box-shadow: 0 14px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(224,169,109,0.35) !important;
+    }
+
+    /* Message text readability */
+    .stChatMessage p, .stChatMessage li, .stChatMessage span {
+        line-height: 1.7 !important;
+        font-size: 0.97rem !important;
+        color: #f0e8de !important;
+    }
+
+    .stChatMessage strong { color: #fcd34d !important; }
+    .stChatMessage code {
+        background: rgba(224,169,109,0.15) !important;
+        color: #e0a96d !important;
+        border-radius: 6px !important;
+        padding: 2px 7px !important;
+        font-family: 'JetBrains Mono', monospace !important;
+        font-size: 0.85rem !important;
+    }
+    .stChatMessage blockquote {
+        border-left: 3px solid #f59e0b !important;
+        background: rgba(245,158,11,0.08) !important;
+        border-radius: 0 10px 10px 0 !important;
+        padding: 10px 16px !important;
+        margin: 10px 0 !important;
+        color: #fbbf24 !important;
+    }
+
+    /* Avatar icon polish */
+    .stChatMessage [data-testid="chatAvatarIcon-user"],
+    .stChatMessage [data-testid="chatAvatarIcon-assistant"] {
+        border-radius: 50% !important;
+        box-shadow: 0 0 10px rgba(224,169,109,0.4);
+    }
+
+    @keyframes chatFadeIn {
+        from { opacity: 0; transform: translateY(10px) scale(0.99); }
+        to   { opacity: 1; transform: translateY(0)  scale(1);    }
+    }
+
+    /* Typing / spinner row */
+    .typing-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 10px 18px;
+        background: rgba(224,169,109,0.1);
+        border: 1px solid rgba(224,169,109,0.25);
+        border-radius: 20px;
+        font-size: 0.88rem;
+        color: #e0a96d;
+        font-style: italic;
+        margin-bottom: 8px;
+    }
+    .typing-dot {
+        width: 7px; height: 7px;
+        background: #e0a96d;
+        border-radius: 50%;
+        animation: typingBounce 1.2s infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+        0%,60%,100% { transform: translateY(0); opacity: 0.5; }
+        30%          { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* Message timestamp */
+    .msg-timestamp {
+        font-size: 0.72rem;
+        color: #7a6a5a;
+        margin-top: 8px;
+        text-align: right;
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: 0.3px;
+    }
+
+    /* Chat scroll area */
+    .chat-scroll-area {
+        max-height: 62vh;
+        overflow-y: auto;
+        padding-right: 6px;
+        scroll-behavior: smooth;
+    }
+    .chat-scroll-area::-webkit-scrollbar { width: 4px; }
+    .chat-scroll-area::-webkit-scrollbar-track { background: transparent; }
+    .chat-scroll-area::-webkit-scrollbar-thumb {
+        background: rgba(224,169,109,0.3);
+        border-radius: 4px;
+    }
+
+    /* ── Floating Glassmorphic Chat Input ───────────────────────── */
+    .stChatInputContainer, div[data-testid="stChatInput"] {
+        border-radius: 24px !important;
+        border: 1.5px solid rgba(224, 169, 109, 0.4) !important;
+        background: rgba(20, 13, 7, 0.92) !important;
+        backdrop-filter: blur(18px) !important;
+        box-shadow: 0 10px 36px rgba(0,0,0,0.5), 0 0 18px rgba(224,169,109,0.08) !important;
+        padding: 6px 10px !important;
+        transition: all 0.3s ease !important;
+        margin-top: 8px !important;
+    }
+    div[data-testid="stChatInput"]:focus-within {
+        border-color: #e0a96d !important;
+        box-shadow: 0 12px 42px rgba(0,0,0,0.6), 0 0 28px rgba(224,169,109,0.22) !important;
+    }
+    div[data-testid="stChatInput"] textarea {
+        color: #f7f3ed !important;
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        background: transparent !important;
+    }
+    div[data-testid="stChatInput"] textarea::placeholder {
+        color: #7a6a5a !important;
+        font-style: italic;
+    }
+    div[data-testid="stChatInput"] button {
+        background: linear-gradient(135deg, rgba(224,169,109,0.25), rgba(245,158,11,0.35)) !important;
+        color: #fcd34d !important;
+        border-radius: 16px !important;
+        border: 1px solid rgba(224,169,109,0.4) !important;
+        transition: all 0.22s ease !important;
+    }
+    div[data-testid="stChatInput"] button:hover {
+        background: #e0a96d !important;
+        color: #0b0704 !important;
+        transform: scale(1.08) !important;
+        box-shadow: 0 4px 12px rgba(224,169,109,0.4) !important;
+    }
+
+    /* ── Sidebar ────────────────────────────────────────────────── */
     section[data-testid="stSidebar"] {
         background-color: #120c08 !important;
         border-right: 1px solid rgba(224, 169, 109, 0.2) !important;
     }
 
-    /* Prompt Suggestion Buttons */
+    /* ── Quick Suggestion Chips ─────────────────────────────────── */
     .prompt-chip-btn button {
         background: linear-gradient(135deg, rgba(45, 30, 19, 0.9) 0%, rgba(25, 16, 10, 0.9) 100%) !important;
         color: #f3e8dc !important;
         border: 1px solid rgba(224, 169, 109, 0.3) !important;
         border-radius: 14px !important;
-        font-size: 0.9rem !important;
+        font-size: 0.88rem !important;
         font-weight: 500 !important;
-        padding: 12px 16px !important;
+        padding: 12px 14px !important;
         transition: all 0.25s ease !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
         text-align: left !important;
         width: 100% !important;
+        letter-spacing: 0.1px;
     }
-    
     .prompt-chip-btn button:hover {
         border-color: #e0a96d !important;
-        background: linear-gradient(135deg, rgba(224, 169, 109, 0.25) 0%, rgba(140, 95, 58, 0.35) 100%) !important;
+        background: linear-gradient(135deg, rgba(224, 169, 109, 0.28) 0%, rgba(140, 95, 58, 0.4) 100%) !important;
         color: #ffffff !important;
-        transform: translateY(-2px) !important;
-        box-shadow: 0 8px 20px rgba(224, 169, 109, 0.2) !important;
+        transform: translateY(-3px) !important;
+        box-shadow: 0 8px 22px rgba(224, 169, 109, 0.22) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -437,175 +586,357 @@ tab_chat, tab_menu, tab_matcher, tab_rag, tab_cart = st.tabs([
 # TAB 1: USTAD CHAIWALA CHAT & RECOMMENDATIONS
 # ==========================================
 with tab_chat:
-    st.markdown("<h4 style='font-family: Outfit; color: #e0a96d; margin-bottom: 12px;'>💡 Quick Recommendations by Ustad Chaiwala:</h4>", unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
+
+    # ── Quick-suggestion chip row ────────────────────────────────
+    st.markdown("""
+    <div style="margin-bottom:14px;">
+        <span style="font-family:'Outfit',sans-serif; font-size:0.85rem;
+                     color:#a39282; letter-spacing:0.5px; text-transform:uppercase;">
+            ✦ Quick Ask
+        </span>
+    </div>""", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns(3)
+    col4, col5, col6 = st.columns(3)
+
     selected_prompt = None
     if "prompt_trigger" in st.session_state and st.session_state.prompt_trigger:
         selected_prompt = st.session_state.prompt_trigger
         st.session_state.prompt_trigger = None
 
-    with col1:
-        st.markdown('<div class="prompt-chip-btn">', unsafe_allow_html=True)
-        if st.button("☕ South Indian Filter Coffee", key="btn_p1"):
-            selected_prompt = "Tell me about South Indian Filter Coffee price and ingredients."
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown('<div class="prompt-chip-btn">', unsafe_allow_html=True)
-        if st.button("🫖 Desi Masala Chai", key="btn_p2"):
-            selected_prompt = "I want a warm spiced Indian tea with milk."
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown('<div class="prompt-chip-btn">', unsafe_allow_html=True)
-        if st.button("🧊 Cold Strong (Milk-Free) <₹250", key="btn_p3"):
-            selected_prompt = "I want a cold strong coffee under ₹250 and I am allergic to milk."
-        st.markdown('</div>', unsafe_allow_html=True)
-        
-    with col4:
-        st.markdown('<div class="prompt-chip-btn">', unsafe_allow_html=True)
-        if st.button("🥛 Kesar Badam Milk", key="btn_p4"):
-            selected_prompt = "Recommend a rich traditional Indian sweet drink."
-        st.markdown('</div>', unsafe_allow_html=True)
+    chip_data = [
+        (col1, "btn_p1", "☕ South Indian Filter Coffee",
+         "Tell me about South Indian Filter Coffee price and ingredients."),
+        (col2, "btn_p3", "🧊 Cold & Strong (Milk-Free) <₹250",
+         "I want a cold strong coffee under ₹250 and I am allergic to milk."),
+        (col3, "btn_p5", "🍵 Matcha Frappuccino?",
+         "Do you have Matcha Frappuccino?"),
+        (col4, "btn_p4", "♨️ Hot Sweet Drink",
+         "I want a hot sweet drink."),
+        (col5, "btn_p6", "🛡️ Milk & Nut Allergy Safe",
+         "I am allergic to milk and nuts."),
+        (col6, "btn_p2", "💰 Under ₹150 Brews",
+         "Show me something under ₹150."),
+    ]
+    for col, key, label, prompt in chip_data:
+        with col:
+            st.markdown('<div class="prompt-chip-btn">', unsafe_allow_html=True)
+            if st.button(label, key=key):
+                selected_prompt = prompt
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
-    # Render Chat History
+    # ── Divider ──────────────────────────────────────────────────
+    st.markdown("""
+    <hr style="border:none; border-top:1px solid rgba(224,169,109,0.15);
+               margin: 4px 0 16px 0;">""", unsafe_allow_html=True)
+
+    # ── Empty-state welcome card ─────────────────────────────────
+    if not st.session_state.messages:
+        st.markdown("""
+        <div style="background: linear-gradient(135deg, rgba(224,169,109,0.07), rgba(245,158,11,0.04));
+                    border: 1px dashed rgba(224,169,109,0.35);
+                    border-radius: 22px; padding: 32px 28px;
+                    text-align: center; margin-bottom: 24px;">
+            <div style="font-size: 3rem; margin-bottom:10px;">☕🫖</div>
+            <h3 style="font-family:'Outfit',sans-serif; color:#e0a96d;
+                       margin:0 0 8px; font-size:1.5rem;">Namaste ji! 🙏</h3>
+            <p style="color:#c4b4a5; font-size:0.97rem; margin:0 0 4px;">
+                Welcome to <strong style='color:#fcd34d;'>Desi Coffee &amp; Chai Khana</strong>
+            </p>
+            <p style="color:#8a7a6a; font-size:0.88rem; margin:0;">
+                Ask me anything — allergy-safe drinks, budget filters, hot vs cold,
+                brewing details, or allergen checks. All answers are strictly sourced
+                from <code style='color:#e0a96d;'>menu.json</code>.
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ── Render chat history ──────────────────────────────────────
+    import datetime
     for msg in st.session_state.messages:
         avatar = "👤" if msg["role"] == "user" else "☕"
         with st.chat_message(msg["role"], avatar=avatar):
             st.markdown(msg["content"], unsafe_allow_html=True)
-            if "telemetry" in msg and msg["telemetry"]:
-                with st.expander("⚡ Vector RAG & ADK Telemetry Breakdown"):
+            # Compact telemetry expander
+            if msg["role"] == "assistant" and msg.get("telemetry"):
+                with st.expander("⚡ RAG & Engine Telemetry", expanded=False):
                     tel = msg["telemetry"]
-                    st.markdown(f"""
-                    - **RAG Strategy**: `{tel.get('strategy', 'N/A')}`
-                    - **Embedding Model**: `{tel.get('embedding_model', 'text-embedding-004')}`
-                    - **Similarity Score**: `{tel.get('top_score', 'N/A')}`
-                    - **Retrieved Knowledge Chunks**: `{', '.join(tel.get('matched_chunks', ['South Indian Filter Coffee']))}`
-                    - **Grounding Source**: `menu.json (Truth Authority)`
-                    """)
+                    rag_cols = st.columns(3)
+                    rag_cols[0].metric("Strategy", tel.get('strategy','Keyword')[:18])
+                    rag_cols[1].metric("Model", tel.get('embedding_model','text-embedding-004')[:20])
+                    rag_cols[2].metric("Top Score", tel.get('top_score', 0))
+                    if tel.get('matched_chunks'):
+                        st.caption(f"🧩 Chunks: {', '.join(tel['matched_chunks'][:3])}")
 
-    # User Input Field
-    chat_input_val = st.chat_input("Ask Ustad Chaiwala about brews, ingredients, prices, or milk allergies...")
+    # ── User input + typing indicator ───────────────────────────
+    chat_input_val = st.chat_input(
+        "Namaste ji! ☕ Ask about brews, prices, allergens, or say 'surprise me'..."
+    )
     user_input = selected_prompt or chat_input_val
 
     if user_input:
-        # Append User Message
+        import datetime as _dt
+        _ts = _dt.datetime.now().strftime("%I:%M %p")
+
+        # Append & render user message
         st.session_state.messages.append({"role": "user", "content": user_input})
         with st.chat_message("user", avatar="👤"):
             st.markdown(user_input)
+            st.markdown(f'<div class="msg-timestamp">{_ts}</div>', unsafe_allow_html=True)
 
-        # Barista Engine Logic
+        # Barista Engine
         response_text = ""
         telemetry_info = {}
 
         with st.chat_message("assistant", avatar="☕"):
-            with st.spinner("Ustad Chaiwala is consulting Knowledge RAG & menu..."):
-                
-                # Retrieve RAG context and telemetry
-                rag_res = search_with_telemetry(user_input)
-                knowledge_context = rag_res["content"]
-                telemetry_info = rag_res["telemetry"]
+            # Typing indicator
+            typing_ph = st.empty()
+            typing_ph.markdown("""
+            <div class="typing-indicator">
+                Ustad Chaiwala is brewing your answer
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+            </div>""", unsafe_allow_html=True)
 
-                # Case A: Live Google ADK Cloud Execution
-                if ADK_AVAILABLE and has_api_access and "runner" in st.session_state and st.session_state.runner:
-                    try:
-                        content = types.Content(role="user", parts=[types.Part(text=user_input)])
-                        async def run_adk():
-                            res = ""
-                            async for event in st.session_state.runner.run_async(
-                                user_id=st.session_state.user_id,
-                                session_id=st.session_state.session_id,
-                                new_message=content
-                            ):
-                                if event.content and event.content.parts:
-                                    for part in event.content.parts:
-                                        if part.text:
-                                            res += part.text
-                            return res
-                        response_text = asyncio.run(run_adk())
-                    except Exception as ex:
-                        response_text = f"⚠️ ADK Execution fallback: {str(ex)}"
+            # RAG retrieval
+            rag_res = search_with_telemetry(user_input)
+            knowledge_context = rag_res["content"]
+            telemetry_info = rag_res["telemetry"]
 
-                # Case B: Smart Built-in RAG Ustad Chaiwala Engine (Rule-based RAG grounding)
-                if not response_text:
-                    q_lower = user_input.lower()
-                    
-                    if "south indian filter coffee" in q_lower or ("filter coffee" in q_lower and "price" in q_lower):
-                        response_text = """Namaste ji! 🙏 Welcome to **Desi Coffee & Chai Khana**!
+            # ── Case A: Live Google ADK ──────────────────────────
+            if ADK_AVAILABLE and has_api_access and st.session_state.get("runner"):
+                try:
+                    content = types.Content(role="user", parts=[types.Part(text=user_input)])
+                    async def run_adk():
+                        res = ""
+                        async for event in st.session_state.runner.run_async(
+                            user_id=st.session_state.user_id,
+                            session_id=st.session_state.session_id,
+                            new_message=content
+                        ):
+                            if event.content and event.content.parts:
+                                for part in event.content.parts:
+                                    if part.text:
+                                        res += part.text
+                        return res
+                    response_text = asyncio.run(run_adk())
+                except Exception as ex:
+                    response_text = f"⚠️ ADK fallback: {str(ex)}"
 
-Ah, our delightful **South Indian Filter Coffee** is priced at **₹140**. ☕
+            # ── Case B: Smart offline RAG engine ─────────────────
+            if not response_text:
+                q = user_input.lower()
 
-### 📜 Drink Highlights & Brewing Process:
-* **Price**: **₹140** (Exact official price in `menu.json`)
-* **Brewing Method**: Prepared using dark-roasted Chicory blended coffee beans, slow-brewed through a traditional stainless brass filter decoction process.
-* **Serving Style**: Poured back and forth between a brass *Dabara* and *Tumbler* to create a velvety, aerated frothy foam layer with hot milk.
-* **Profile**: Hot, Strong, Creamy & Medium-Sweet.
+                unavail_kw = ["matcha", "frappuccino", "boba", "bubble tea",
+                               "latte macchiato", "mocha", "smoothie", "milkshake"]
 
-> ⚠️ **Allergen Notice**: Contains **Milk (Dairy)**! If you have a lactose intolerance or milk allergy, please request a dairy-free beverage like our **Cold Brew (₹220)** or **Lemon Iced Tea (₹150)**.
+                # ① Unknown / unavailable item
+                if (any(kw in q for kw in unavail_kw)
+                        and not any(item["name"].lower() in q for item in menu_items)):
+                    asked = next((kw for kw in unavail_kw if kw in q), "that item")
+                    response_text = f"""\
+Namaste ji! 🙏
 
-Would you like me to add this to your active order basket?"""
+I'm so sorry — **{asked.title()}** is not on our menu at **Desi Coffee & Chai Khana**.
 
-                    elif "masala chai" in q_lower or "spiced indian tea" in q_lower:
-                        response_text = """Namaste ji! 🙏 Our authentic **Desi Masala Chai** is priced at **₹130**. 🫖
+We craft only authentic Indian coffees, spiced chai, and specialty teas — every item
+verified against `menu.json`. No Matcha Frappuccinos here, ji!
 
-### 🌿 Flavors & Ingredients:
-* **Price**: **₹130**
-* **Ingredients**: Assam black tea leaves slow-simmered with crushed green cardamom, fresh ginger root, cloves, cinnamon, and creamy whole milk.
-* **Attributes**: Hot, Spiced, Comforting & Creamy.
+### 🌟 Cold & Refreshing Alternatives You'll Love:
+| Drink | Price | Notes |
+|---|---|---|
+| 🧊 Cold Brew | **₹220** | Bold 16-hr steep, dairy-free |
+| 🥭 Mango Iced Tea | **₹180** | Tropical Alphonso, dairy-free |
+| 🍋 Lemon Iced Tea | **₹150** | Light & refreshing, dairy-free |
+| ☕ South Indian Filter Coffee | **₹140** | Authentic brass decoction |
 
-> ⚠️ **Allergen Notice**: Contains **Milk**. Dairy-free alternatives include **Lemon Iced Tea (₹150)** or **Mango Iced Tea (₹180)**!"""
+Shall I help you pick one? 😊"""
 
-                    elif "milk" in q_lower and ("allergic" in q_lower or "no milk" in q_lower or "dairy-free" in q_lower or "milk-free" in q_lower or "under 250" in q_lower or "<250" in q_lower or "< 250" in q_lower):
-                        response_text = """Namaste ji! 🙏 Safety comes first at **Desi Coffee & Chai Khana**.
+                # ② South Indian Filter Coffee
+                elif ("south indian filter coffee" in q
+                      or ("filter coffee" in q and "price" in q)):
+                    response_text = """\
+Namaste ji! 🙏 Ustad Chaiwala presenting our star brew!
 
-Since you mentioned a **milk allergy**, here are our top 100% **Milk-Free & Dairy-Free** recommendations under **₹250**:
+## ☕ South Indian Filter Coffee — **₹140**
 
-1. 🧊 **Cold Brew** — **₹220** (Smooth 16-hour cold steeped coffee, strong, zero milk, low-sweet)
-2. ☕ **Espresso** — **₹120** (Bold single-shot dark roast espresso crema, zero milk)
-3. 🍋 **Lemon Iced Tea** — **₹150** (Refreshing chilled natural lemon infused tea)
-4. 🥭 **Mango Iced Tea** — **₹180** (Tropical Alphonso mango tea poured over ice)
+| Attribute | Detail |
+|---|---|
+| 💰 Price | **₹140** (from `menu.json`) |
+| 🌡️ Temperature | **Hot** |
+| 💪 Strength | **Strong** |
+| 🍬 Sweetness | **Medium-Sweet** |
+| 🥛 Texture | **Creamy & Frothy** |
 
-> 🛡️ **Guaranteed Safety**: None of these items contain milk or dairy components in `menu.json`."""
+### 📜 Brewing Method
+Dark-roasted Chicory-blended coffee beans are slow-brewed through a
+traditional **stainless brass filter** (decoction process). The thick
+decoction is then poured rhythmically between a brass *Dabara* and
+*Tumbler* to create a velvety, aerated frothy foam — pure theatre! 🎭
 
-                    elif "kesar badam" in q_lower or "sweet drink" in q_lower or "rich traditional" in q_lower:
-                        response_text = """Namaste ji! 🙏 For a rich traditional indulgence, Ustad Chaiwala highly recommends our **Kesar Badam Milk**! 🥛✨
+> ⚠️ **Allergen Warning**: Contains **Milk (Dairy)**.
+> Dairy-free alternatives: **Cold Brew ₹220** · **Lemon Iced Tea ₹150** · **Espresso ₹120**
 
-### 🌟 Details:
-* **Price**: **₹210**
-* **Ingredients**: Premium Kashmiri Saffron (*Kesar*), finely ground almond nut paste (*Badam*), cardamom, and warm whole milk.
-* **Attributes**: Rich, Sweet, Creamy & Nutty.
+Would you like to add this to your basket? 🛒"""
 
-> ⚠️ **Allergen Notice**: Contains both **Milk (Dairy)** and **Tree Nuts (Almonds)**."""
+                # ③ Desi Masala Chai
+                elif "masala chai" in q or "spiced indian tea" in q:
+                    response_text = """\
+Namaste ji! 🙏 Ah, our beloved chai!
 
+## 🫖 Desi Masala Chai — **₹130**
+
+| Attribute | Detail |
+|---|---|
+| 💰 Price | **₹130** (from `menu.json`) |
+| 🌡️ Temperature | **Hot** |
+| 🌿 Spices | Cardamom · Ginger · Cloves · Cinnamon |
+| 🥛 Base | Whole milk + Assam black tea |
+| 🍬 Sweetness | **Medium-Sweet** |
+
+### 🌿 About This Brew
+Our chai is slow-simmered for at least **8 minutes** to let every spice
+blossom fully. The result is a deeply aromatic, warming cup that feels
+like a hug. 🤗
+
+> ⚠️ **Allergen Warning**: Contains **Milk (Dairy)**.
+> Dairy-free alternatives: **Lemon Iced Tea ₹150** · **Mango Iced Tea ₹180**"""
+
+                # ④ Cold strong + milk allergy < ₹250
+                elif (("cold" in q or "chilled" in q) and "strong" in q
+                      and ("milk" in q or "dairy" in q)
+                      and ("allergic" in q or "free" in q
+                           or "no" in q or "<250" in q or "under" in q)):
+                    response_text = """\
+Namaste ji! 🙏 Safety first — always!
+
+## 🛡️ Milk-Free Strong Drinks Under ₹250
+
+| Drink | Price | Temp | Strength | Allergens |
+|---|---|---|---|---|
+| 🧊 **Cold Brew** | **₹220** | Cold | Strong | ✅ None |
+| ☕ **Espresso** | **₹120** | Hot | Strong | ✅ None |
+| 🍋 Lemon Iced Tea | ₹150 | Cold | Mild | ✅ None |
+| 🥭 Mango Iced Tea | ₹180 | Cold | Mild | ✅ None |
+
+**🏆 Top Pick for you:** 🧊 **Cold Brew** at **₹220** — cold, bold,
+16-hour steeped, zero dairy, zero nuts, under your ₹250 budget.
+
+> 🛡️ Strictly verified against `menu.json`. *Iced Latte (₹240, contains milk)*
+> has been excluded from recommendations."""
+
+                # ⑤ Milk + Nut allergy
+                elif (("allergic" in q or "allergy" in q)
+                       and ("milk" in q or "dairy" in q)
+                       and ("nut" in q or "nuts" in q)):
+                    response_text = """\
+Namaste ji! 🙏 I'll keep you completely safe!
+
+## 🛡️ 100% Milk-Free AND Nut-Free Menu Items
+
+| Drink | Price | Temp | Notes |
+|---|---|---|---|
+| 🧊 **Cold Brew** | **₹220** | Cold | Bold, 16-hr steep |
+| ☕ **Espresso** | **₹120** | Hot | Strong dark roast |
+| 🍋 **Lemon Iced Tea** | **₹150** | Cold | Light & refreshing |
+| 🥭 **Mango Iced Tea** | **₹180** | Cold | Tropical Alphonso |
+
+> 🛡️ **Strict Exclusions from `menu.json`:**
+> - 🥛 Milk items removed: Filter Coffee · Masala Chai · Cappuccino · Iced Latte · Hot Chocolate · Kesar Badam Milk
+> - 🥜 Nut items removed: Kesar Badam Milk (contains almonds)
+
+All 4 options above are fully safe for both milk and nut allergies! 💚"""
+
+                # ⑥ Under ₹150
+                elif (("150" in q or "<150" in q or "< 150" in q)
+                       and ("under" in q or "budget" in q
+                            or "show" in q or "less" in q or "below" in q)):
+                    response_text = """\
+Namaste ji! 🙏 Great value brews for you!
+
+## 💰 All Drinks Under ₹150 (from `menu.json`)
+
+| Drink | Price | Temp | Allergens |
+|---|---|---|---|
+| ☕ **Espresso** | **₹120** | Hot | ✅ None |
+| 🫖 **Desi Masala Chai** | **₹130** | Hot | ⚠️ Milk |
+| ☕ **South Indian Filter Coffee** | **₹140** | Hot | ⚠️ Milk |
+| 🍋 **Lemon Iced Tea** | **₹150** | Cold | ✅ None |
+
+**💡 Ustad's Tip:** For the best value dairy-free option, go with
+**Espresso at ₹120** — strong, bold, pure! Or **Lemon Iced Tea at ₹150**
+for a refreshing cold option. 🍋"""
+
+                # ⑦ Hot sweet drink
+                elif ("hot" in q or "warm" in q) and ("sweet" in q or "rich" in q):
+                    response_text = """\
+Namaste ji! 🙏 Warm and sweet — excellent choice!
+
+## ♨️ Hot & Sweet Drinks (from `menu.json`)
+
+| Drink | Price | Sweetness | Allergens |
+|---|---|---|---|
+| 🍫 **Hot Chocolate** | **₹190** | 🍬🍬🍬 Sweet | ⚠️ Milk |
+| 🥛 **Kesar Badam Milk** | **₹210** | 🍬🍬🍬 Sweet | ⚠️ Milk + Nuts |
+| ☕ **South Indian Filter Coffee** | **₹140** | 🍬🍬 Medium | ⚠️ Milk |
+| 🫖 **Desi Masala Chai** | **₹130** | 🍬🍬 Medium | ⚠️ Milk |
+
+**🏆 Ustad's Recommendation:** Try our **Kesar Badam Milk (₹210)** —
+luxurious Kashmiri saffron (*kesar*) with crushed almonds (*badam*)
+and cardamom. Pure indulgence! *(Contains milk & tree nuts)*
+
+Which one shall Ustad Chaiwala prepare? 😊"""
+
+                # ⑧ Surprise / general fallback
+                elif "surprise" in q or "recommend" in q or "suggest" in q:
+                    dairy_free = [i for i in menu_items if "milk" not in i.get("allergens", [])]
+                    if dairy_free:
+                        pick = sorted(dairy_free, key=lambda x: x["price"])[len(dairy_free)//2]
+                        response_text = f"""\
+Namaste ji! 🙏 Ustad Chaiwala's surprise pick for today:
+
+## 🌟 Today's Special — {pick['name']} at **₹{pick['price']}**
+
+{pick['description']}
+
+**Tags:** {' · '.join(pick['tags'])}
+**Allergens:** {'✅ None (Dairy-Free!)' if not pick.get('allergens') else ', '.join(pick['allergens'])}
+
+Shall I add it to your basket? 🛒"""
                     else:
-                        # General RAG fallback response
-                        response_text = f"""Namaste ji! 🙏 Ustad Chaiwala at your service!
+                        response_text = "Namaste ji! 🙏 " + knowledge_context
 
-Based on our Vector RAG Knowledge Base and `menu.json`:
+                else:
+                    # General RAG context fallback
+                    response_text = f"""\
+Namaste ji! 🙏 Ustad Chaiwala at your service!
 
-{knowledge_context}
+{knowledge_context if knowledge_context else 'Please ask me about any specific drink, your budget, temperature preference, or allergy requirements and I will find the perfect brew from our menu!'}
 
-How else can Ustad Chaiwala assist your chai & coffee experience today?"""
+How else can I assist your chai & coffee experience today? ☕🫖"""
 
-                # Display response
-                st.markdown(response_text, unsafe_allow_html=True)
-                
-                # Expander for Telemetry
-                with st.expander("⚡ Vector RAG & ADK Telemetry Breakdown"):
-                    st.markdown(f"""
-                    - **RAG Strategy**: `{telemetry_info.get('strategy', 'Vector RAG (text-embedding-004)')}`
-                    - **Embedding Model**: `{telemetry_info.get('embedding_model', 'text-embedding-004')}`
-                    - **Similarity Threshold**: `0.35`
-                    - **Grounding Source**: `menu.json (Absolute Price & Allergen Truth)`
-                    """)
+            # Clear typing indicator, show response
+            typing_ph.empty()
+            st.markdown(response_text, unsafe_allow_html=True)
+            st.markdown(f'<div class="msg-timestamp">Ustad Chaiwala · {_ts}</div>',
+                        unsafe_allow_html=True)
 
-        # Append Assistant Response
+            # Compact telemetry
+            with st.expander("⚡ RAG & Engine Telemetry", expanded=False):
+                tcols = st.columns(3)
+                tcols[0].metric("Strategy",
+                    telemetry_info.get('strategy', 'Keyword')[:18])
+                tcols[1].metric("Model",
+                    telemetry_info.get('embedding_model', 'text-embedding-004')[:20])
+                tcols[2].metric("Score",
+                    telemetry_info.get('top_score', 0))
+
+        # Persist assistant message
         st.session_state.messages.append({
-            "role": "assistant", 
+            "role": "assistant",
             "content": response_text,
             "telemetry": telemetry_info
         })

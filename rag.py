@@ -61,11 +61,11 @@ class CoffeeKnowledgeRAG:
             return None
         try:
             use_vertex = os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "").lower() in ("true", "1")
-            project = os.environ.get("GOOGLE_CLOUD_PROJECT")
-            location = os.environ.get("GOOGLE_CLOUD_LOCATION")
+            project = os.environ.get("GOOGLE_CLOUD_PROJECT") or os.environ.get("GCP_PROJECT")
+            location = os.environ.get("GOOGLE_CLOUD_LOCATION") or os.environ.get("GCP_LOCATION") or "us-central1"
 
             if use_vertex and project:
-                return genai.Client(vertexai=True, project=project, location=location or "us-central1")
+                return genai.Client(vertexai=True, project=project, location=location)
             return genai.Client()
         except Exception:
             return None

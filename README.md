@@ -42,6 +42,7 @@ coffee-ai/
 ├── coffee_knowledge.md    # Coffee & chai knowledge base chunks
 ├── menu.json              # Source of truth for menu items, prices, tags, and allergens
 ├── requirements.txt       # Project dependencies (google-adk, streamlit, google-genai, numpy)
+├── Dockerfile             # Production Docker container definition for Cloud Run
 └── README.md              # Project documentation
 ```
 
@@ -62,12 +63,12 @@ cd coffee-ai
 pip install -r requirements.txt
 ```
 
-### 3. API Key Setup
+### 3. API Key Setup / Vertex AI Authentication
 Set your Gemini API key in your terminal:
 ```bash
 export GEMINI_API_KEY="your-gemini-api-key-here"
 ```
-*(Alternatively, you can enter your API key directly in the app's sidebar UI setting).*
+*(Alternatively, for Google Cloud Run deployments, set `GOOGLE_GENAI_USE_VERTEXAI=true` to authenticate seamlessly via Service Account Application Default Credentials).*
 
 ### 4. Run Locally
 ```bash
@@ -78,14 +79,42 @@ The web app will launch at `http://localhost:8501`.
 
 ---
 
-## 🧪 Example Queries
+## ☁️ Google Cloud Run Deployment
 
-* **Milk Allergy Query**: `"I want a cold strong coffee under ₹250 and I am allergic to milk."`  
-  * **Result**: Recommends **Cold Brew** (₹220). Excludes `Iced Latte` (contains milk).
-* **Traditional Indian Chai**: `"I want a warm spiced Indian tea with milk."`  
-  * **Result**: Recommends **Desi Masala Chai** (₹130).
-* **Unavailability Check**: `"Do you have Matcha Frappuccino?"`  
-  * **Result**: Clearly states Matcha Frappuccino is unavailable and suggests available alternatives.
+Deploy seamlessly to Google Cloud Run:
+
+```bash
+# Set GCP project
+gcloud config set project YOUR_PROJECT_ID
+
+# Deploy directly from source
+gcloud run deploy desi-coffee-ai \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --set-env-vars GOOGLE_GENAI_USE_VERTEXAI=true,GOOGLE_CLOUD_PROJECT=YOUR_PROJECT_ID
+```
+
+The container automatically listens on the environment `$PORT` (default 8080) and binds to `0.0.0.0`.
+
+---
+
+## 🔒 Security Best Practices
+
+- **Zero Hardcoded Keys**: No API keys or secrets are stored in source code, Dockerfile, or GitHub.
+- **Vertex AI Service Identity**: Production deployments on Cloud Run authenticate via IAM and Application Default Credentials (ADC).
+- **Git Protection**: Sensitive environment files (`.env`, `.env.local`) and build artifacts are excluded via `.gitignore`.
+
+---
+
+## 🧪 Core Test Scenarios
+
+1. **South Indian Filter Coffee**: `"Tell me about South Indian Filter Coffee price and ingredients."` → **₹140** (Brass filter, contains milk).
+2. **Cold Milk-Free <₹250**: `"I want a cold strong coffee under ₹250 and I am allergic to milk."` → **Cold Brew** (₹220).
+3. **Unavailable Product**: `"Do you have Matcha Frappuccino?"` → Clearly states unavailable; does NOT invent item/price.
+4. **Hot Sweet Drink**: `"I want a hot sweet drink."` → **Hot Chocolate** (₹190) or **Kesar Badam Milk** (₹210).
+5. **Milk & Nut Allergies**: `"I am allergic to milk and nuts."` → Recommends **Cold Brew** (₹220), **Espresso** (₹120), **Lemon Iced Tea** (₹150), **Mango Iced Tea** (₹180).
+6. **Budget Limit <₹150**: `"Show me something under ₹150."` → Recommends **Espresso** (₹120), **Desi Masala Chai** (₹130), **Filter Coffee** (₹140), **Lemon Iced Tea** (₹150).
 
 ---
 
