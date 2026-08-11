@@ -1,45 +1,72 @@
 [
   {
+    "name": "South Indian Filter Coffee",
+    "description": "Traditional decoction brewed in brass filter with frothy hot milk",
+    "price": 140,
+    "tags": ["hot", "coffee", "strong", "creamy", "medium-sweet"],
+    "allergens": ["milk"]
+  },
+  {
+    "name": "Desi Masala Chai",
+    "description": "Fragrant tea slow-brewed with cardamom, ginger, cloves, and milk",
+    "price": 130,
+    "tags": ["hot", "tea", "spiced", "creamy", "medium-sweet"],
+    "allergens": ["milk"]
+  },
+  {
     "name": "Espresso",
-    "description": "Strong and rich single-shot espresso",
+    "description": "Strong and rich single-shot dark roast espresso",
     "price": 120,
     "tags": ["hot", "coffee", "strong", "low-sweet"],
     "allergens": []
   },
   {
     "name": "Cappuccino",
-    "description": "Espresso with steamed milk and milk foam",
+    "description": "Espresso with steamed velvety milk and rich foam",
     "price": 180,
     "tags": ["hot", "coffee", "creamy", "medium-sweet"],
     "allergens": ["milk"]
   },
   {
     "name": "Cold Brew",
-    "description": "Smooth and refreshing cold brewed coffee",
+    "description": "Smooth and refreshing 16-hour cold steeped coffee",
     "price": 220,
     "tags": ["cold", "coffee", "strong", "low-sweet"],
     "allergens": []
   },
   {
     "name": "Iced Latte",
-    "description": "Cold espresso with chilled milk",
+    "description": "Cold espresso blended with chilled fresh milk over ice",
     "price": 240,
     "tags": ["cold", "coffee", "creamy", "medium-sweet"],
     "allergens": ["milk"]
   },
   {
     "name": "Hot Chocolate",
-    "description": "Warm chocolate drink with steamed milk",
+    "description": "Warm rich cocoa beverage made with steamed milk",
     "price": 190,
     "tags": ["hot", "chocolate", "sweet", "creamy"],
     "allergens": ["milk"]
   },
   {
     "name": "Lemon Iced Tea",
-    "description": "Refreshing cold tea with lemon",
+    "description": "Refreshing chilled tea infused with natural lemon juice",
     "price": 150,
     "tags": ["cold", "tea", "refreshing", "low-sweet"],
     "allergens": []
+  },
+  {
+    "name": "Kesar Badam Milk",
+    "description": "Rich saffron and crushed almond drink with cardamom",
+    "price": 210,
+    "tags": ["hot", "sweet", "creamy", "nuts"],
+    "allergens": ["milk", "nuts"]
+  },
+  {
+    "name": "Mango Iced Tea",
+    "description": "Cool tropical Alphonso mango tea over crushed ice",
+    "price": 180,
+    "tags": ["cold", "tea", "sweet", "refreshing"],
+    "allergens": []
   }
 ]
-
