@@ -1,4 +1,19 @@
+# Python
 __pycache__/
 *.pyc
-*.pyxx
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Environment variables
 .env
+.env.local
+
+# Streamlit & OS
+.streamlit/
+.DS_Store
+*.log
