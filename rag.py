@@ -178,13 +178,20 @@ class CoffeeKnowledgeRAG:
         if not query_words:
             return ""
 
-        matched = []
+        scored_chunks = []
         for chunk in self.chunks:
-            text_lower = chunk["text"].lower()
-            if any(word in text_lower for word in query_words):
-                matched.append(chunk["text"])
+            if chunk["title"].lower() in ("overview", "indian coffee & tea shop knowledge base"):
+                continue
 
-        return "\n\n".join(matched[:2]) if matched else ""
+            text_lower = chunk["text"].lower()
+            score = sum(1 for word in query_words if word in text_lower)
+            if score > 0:
+                scored_chunks.append((score, chunk["text"]))
+
+        scored_chunks.sort(key=lambda x: x[0], reverse=True)
+        matched = [text for _, text in scored_chunks[:2]]
+
+        return "\n\n".join(matched) if matched else ""
 
     def _fallback_menu_search(self, query: str) -> str:
         """Fallback lookup using menu.json."""
