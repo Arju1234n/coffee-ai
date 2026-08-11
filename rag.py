@@ -203,7 +203,10 @@ class CoffeeKnowledgeRAG:
                     if any(w in item_text for w in query_words):
                         results.append(item)
 
-                return json.dumps(results if results else menu)
+                if not results:
+                    results = menu
+
+                return json.dumps(results[:3])
             except Exception:
                 pass
         return "Menu information unavailable."
