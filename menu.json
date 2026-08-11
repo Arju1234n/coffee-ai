@@ -1,0 +1,45 @@
+[
+  {
+    "name": "Espresso",
+    "description": "Strong and rich single-shot espresso",
+    "price": 120,
+    "tags": ["hot", "coffee", "strong", "low-sweet"],
+    "allergens": []
+  },
+  {
+    "name": "Cappuccino",
+    "description": "Espresso with steamed milk and milk foam",
+    "price": 180,
+    "tags": ["hot", "coffee", "creamy", "medium-sweet"],
+    "allergens": ["milk"]
+  },
+  {
+    "name": "Cold Brew",
+    "description": "Smooth and refreshing cold brewed coffee",
+    "price": 220,
+    "tags": ["cold", "coffee", "strong", "low-sweet"],
+    "allergens": []
+  },
+  {
+    "name": "Iced Latte",
+    "description": "Cold espresso with chilled milk",
+    "price": 240,
+    "tags": ["cold", "coffee", "creamy", "medium-sweet"],
+    "allergens": ["milk"]
+  },
+  {
+    "name": "Hot Chocolate",
+    "description": "Warm chocolate drink with steamed milk",
+    "price": 190,
+    "tags": ["hot", "chocolate", "sweet", "creamy"],
+    "allergens": ["milk"]
+  },
+  {
+    "name": "Lemon Iced Tea",
+    "description": "Refreshing cold tea with lemon",
+    "price": 150,
+    "tags": ["cold", "tea", "refreshing", "low-sweet"],
+    "allergens": []
+  }
+]
+
