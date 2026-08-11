@@ -1,19 +1,19 @@
-# ☕🫖 Desi AI Barista
+# ☕🫖 Desi Coffee & Chai Khana (Ustad Chaiwala Persona)
 
-An authentic Indian Coffee & Chai House AI Assistant built with **Google Agent Development Kit (ADK)**, **Google GenAI**, and a custom **Vector RAG Architecture**.
+An authentic Indian Coffee & Chai House AI Assistant powered by **Ustad Chaiwala persona**, **Google Agent Development Kit (ADK)**, **Google GenAI**, and a custom **Vector RAG Architecture**.
 
 ---
 
 ## 🌟 Overview
 
-**Desi AI Barista** is a personalized cafe assistant that helps customers discover coffee, chai, and specialty beverages based on their budget, temperature preferences (hot vs cold), strength (strong vs mild), sweetness levels, and strict allergen requirements (e.g., dairy/milk-free, nut-free).
+**Desi Coffee & Chai Khana** is an authentic Indian beverage house guided by **Ustad Chaiwala** — helping guests discover coffee, chai, and specialty drinks based on their budget, temperature preferences (hot vs cold), strength (strong vs mild), sweetness levels, and strict allergen requirements (e.g., dairy/milk-free, nut-free).
 
 ### Key Features
 * 🔍 **Vector RAG Engine**: Indexes rich beverage profiles in `coffee_knowledge.md` using Google's `text-embedding-004` model and NumPy cosine similarity.
 * 🛡️ **Authoritative Safety**: `menu.json` remains the strict source of truth for pricing (₹), availability, and allergen disclosures.
 * 🇮🇳 **Indian Cafe Menu**: Includes South Indian Filter Coffee, Desi Masala Chai, Kesar Badam Milk, Mango Iced Tea, Cold Brew, Espresso, Cappuccino, Iced Latte, Hot Chocolate, and Lemon Iced Tea.
 * 🚫 **Allergen Protection**: Prevents recommending milk-containing items to customers with dairy allergies.
-* 🎨 **Glassmorphic Streamlit UI**: Real-time menu overview sidebar, dark warm coffee theme, quick suggestion chips, and API key management.
+* 🎨 **Glassmorphic Streamlit UI**: Real-time menu matrix, dark warm coffee theme, quick suggestion chips, flavor matcher, RAG telemetry visualizer, and order builder.
 
 ---
 
@@ -22,7 +22,7 @@ An authentic Indian Coffee & Chai House AI Assistant built with **Google Agent D
 ```mermaid
 graph TD
     User["User Interface (Streamlit app.py)"] -->|Async Event| Runner["InMemoryRunner (google.adk)"]
-    Runner --> Agent["desi_barista_agent (agent.py)"]
+    Runner --> Agent["ustad_chaiwala_agent (agent.py)"]
     Agent -->|1. Vector RAG Search| RAG["search_coffee_knowledge (rag.py)"]
     RAG -->|GenAI Embeddings| EmbedModel["text-embedding-004"]
     EmbedModel --> KB["coffee_knowledge.md (Cosine Similarity)"]

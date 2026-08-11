@@ -125,10 +125,21 @@ class CoffeeKnowledgeRAG:
         except Exception:
             self.embeddings = []
 
-    def search(self, query: str, top_k: int = 2) -> str:
-        """Search relevant coffee knowledge using vector similarity or graceful keyword fallback."""
+    def search_with_telemetry(self, query: str, top_k: int = 2) -> Dict[str, Any]:
+        """Search coffee knowledge and return both content and telemetry info."""
+        telemetry = {
+            "query": query,
+            "embedding_model": self.embedding_model if (NUMPY_AVAILABLE and self.embeddings) else "N/A (Keyword Fallback)",
+            "strategy": "Keyword Match",
+            "top_score": 0.0,
+            "matched_chunks": [],
+            "matched_menu_items": []
+        }
+
         if not query:
-            return self._fallback_menu_search(query)
+            fallback = self._fallback_menu_search(query)
+            telemetry["strategy"] = "Full Menu Fallback"
+            return {"content": fallback, "telemetry": telemetry}
 
         # 1. Vector Search
         if NUMPY_AVAILABLE and len(self.embeddings) == len(self.chunks) and any(e is not None for e in self.embeddings):
@@ -157,23 +168,29 @@ class CoffeeKnowledgeRAG:
                                 scores.append((score, self.chunks[idx]))
 
                         scores.sort(key=lambda x: x[0], reverse=True)
-                        filtered_results = [
-                            item[1]["text"] for item in scores[:top_k]
-                            if item[0] >= self.similarity_threshold
-                        ]
-
-                        if filtered_results:
-                            return "\n\n".join(filtered_results)
+                        if scores and scores[0][0] >= self.similarity_threshold:
+                            filtered_results = [
+                                item[1]["text"] for item in scores[:top_k]
+                                if item[0] >= self.similarity_threshold
+                            ]
+                            telemetry["strategy"] = "Vector RAG (Cosine Similarity)"
+                            telemetry["top_score"] = round(scores[0][0], 4)
+                            telemetry["matched_chunks"] = [item[1]["title"] for item in scores[:top_k] if item[0] >= self.similarity_threshold]
+                            return {"content": "\n\n".join(filtered_results), "telemetry": telemetry}
                 except Exception:
                     pass
 
         # 2. Keyword fallback over knowledge chunks
         matched_chunks = self._keyword_search(query)
         if matched_chunks:
-            return matched_chunks
+            telemetry["strategy"] = "BM25/Keyword Knowledge Chunk Search"
+            telemetry["matched_chunks"] = ["Retrieved Knowledge Chunks"]
+            return {"content": matched_chunks, "telemetry": telemetry}
 
         # 3. Fallback to menu.json search
-        return self._fallback_menu_search(query)
+        fallback = self._fallback_menu_search(query)
+        telemetry["strategy"] = "Structured Menu Lookup (menu.json)"
+        return {"content": fallback, "telemetry": telemetry}
 
     def _keyword_search(self, query: str) -> str:
         if not self.chunks:
@@ -247,6 +264,7 @@ class CoffeeKnowledgeRAG:
             return "[]"
 
 
+
 # Singleton instance
 rag_engine = CoffeeKnowledgeRAG()
 
@@ -254,7 +272,27 @@ rag_engine = CoffeeKnowledgeRAG()
 def search_coffee_knowledge(query: str = "") -> str:
     """Retrieve relevant coffee shop knowledge using vector search with safe fallbacks."""
     try:
-        return rag_engine.search(query)
+        res = rag_engine.search_with_telemetry(query)
+        return res["content"]
     except Exception as e:
         return rag_engine._fallback_menu_search(query)
+
+
+def search_with_telemetry(query: str = "") -> Dict[str, Any]:
+    """Retrieve relevant coffee shop knowledge and telemetry info."""
+    try:
+        return rag_engine.search_with_telemetry(query)
+    except Exception as e:
+        return {
+            "content": rag_engine._fallback_menu_search(query),
+            "telemetry": {
+                "query": query,
+                "embedding_model": "text-embedding-004",
+                "strategy": "Menu Fallback",
+                "top_score": 0.0,
+                "matched_chunks": []
+            }
+        }
+
+
 

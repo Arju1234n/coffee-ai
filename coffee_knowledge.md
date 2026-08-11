@@ -1,7 +1,7 @@
-# Indian Coffee & Tea Shop Knowledge Base
+# Indian Coffee & Tea Shop Knowledge Base - Desi Coffee & Chai Khana
 
 ## Overview
-Welcome to our Authentic Indian AI Cafe! We serve traditional Indian filter coffees, spiced chai, herbal teas, and handcrafted espresso drinks. Every menu item details temperature (hot vs cold), strength (strong vs mild), sweetness level, pricing in ₹, and allergen disclosures.
+Welcome to Desi Coffee & Chai Khana by Ustad Chaiwala! We serve traditional Indian filter coffees, spiced chai, herbal teas, and handcrafted espresso drinks. Every menu item details temperature (hot vs cold), strength (strong vs mild), sweetness level, pricing in ₹, and allergen disclosures.
 
 ---
 
