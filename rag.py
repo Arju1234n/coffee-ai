@@ -188,28 +188,51 @@ class CoffeeKnowledgeRAG:
 
     def _fallback_menu_search(self, query: str) -> str:
         """Fallback lookup using menu.json."""
-        if os.path.exists(self.menu_file):
-            try:
-                with open(self.menu_file, "r", encoding="utf-8") as f:
-                    menu = json.load(f)
+        if not os.path.exists(self.menu_file):
+            return "[]"
 
-                if not query:
-                    return json.dumps(menu)
+        try:
+            with open(self.menu_file, "r", encoding="utf-8") as f:
+                menu = json.load(f)
 
-                query_words = [w for w in query.lower().split() if len(w) > 2]
-                results = []
-                for item in menu:
-                    item_text = (item["name"] + " " + item["description"] + " " + " ".join(item["tags"])).lower()
-                    if any(w in item_text for w in query_words):
-                        results.append(item)
+            if not query:
+                return json.dumps(menu)
 
-                if not results:
-                    results = menu
+            query_words = [
+                w for w in query.lower().split()
+                if len(w) > 2
+            ]
 
-                return json.dumps(results[:3])
-            except Exception:
-                pass
-        return "Menu information unavailable."
+            results = []
+
+            for item in menu:
+                item_text = (
+                    item["name"]
+                    + " "
+                    + item["description"]
+                    + " "
+                    + " ".join(item["tags"])
+                ).lower()
+
+                matched_words = sum(
+                    1 for word in query_words
+                    if word in item_text
+                )
+
+                if matched_words > 0:
+                    results.append((matched_words, item))
+
+            results.sort(
+                key=lambda x: x[0],
+                reverse=True
+            )
+
+            return json.dumps(
+                [item for _, item in results[:3]]
+            )
+
+        except Exception:
+            return "[]"
 
 
 # Singleton instance
