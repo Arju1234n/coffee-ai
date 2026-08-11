@@ -16,129 +16,175 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-
-# Custom Styling (Vanilla CSS with Warm Coffee Design Tokens & Glassmorphism)
+# Premium Modern UI/UX CSS Design Tokens
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     
     .stApp {
-        background: linear-gradient(135deg, #131110 0%, #1c1815 50%, #251e19 100%);
-        color: #f3efe6;
+        background: radial-gradient(circle at 50% 0%, #221b15 0%, #120e0b 60%, #0a0806 100%);
+        color: #f6f2eb;
+    }
+
+    /* Main Container Padding */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1250px;
     }
     
-    /* Header Banner */
+    /* Hero Banner */
     .hero-banner {
-        background: linear-gradient(135deg, rgba(212, 163, 115, 0.15) 0%, rgba(186, 117, 70, 0.25) 100%);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(212, 163, 115, 0.3);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        text-align: center;
+        background: linear-gradient(135deg, rgba(224, 169, 109, 0.12) 0%, rgba(90, 62, 43, 0.25) 50%, rgba(30, 22, 16, 0.6) 100%);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(224, 169, 109, 0.3);
+        border-radius: 20px;
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
     }
 
     .hero-title {
-        font-size: 2.2rem;
+        font-family: 'Outfit', sans-serif;
+        font-size: 2.5rem;
         font-weight: 700;
-        background: linear-gradient(90deg, #fefae0, #d4a373, #faedcd);
+        background: linear-gradient(90deg, #fff7ed, #e0a96d, #fef3c7);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin: 0;
+        letter-spacing: -0.5px;
     }
 
     .hero-subtitle {
-        color: #cca885;
+        color: #cbb49e;
         font-size: 1.05rem;
-        margin-top: 6px;
+        margin-top: 4px;
+        font-weight: 400;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid rgba(34, 197, 94, 0.35);
+        color: #4ade80;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #22c55e;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #22c55e;
     }
 
     /* Menu Card items */
     .menu-card {
-        background: rgba(35, 29, 24, 0.7);
-        border: 1px solid rgba(212, 163, 115, 0.2);
-        border-radius: 12px;
-        padding: 12px 16px;
-        margin-bottom: 10px;
-        transition: transform 0.2s ease, border-color 0.2s ease;
+        background: rgba(26, 21, 17, 0.75);
+        border: 1px solid rgba(224, 169, 109, 0.18);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .menu-card:hover {
-        border-color: #d4a373;
+        border-color: #e0a96d;
         transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
     }
     
     .menu-item-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
     
     .menu-name {
+        font-family: 'Outfit', sans-serif;
         font-weight: 600;
-        font-size: 1.05rem;
-        color: #fefae0;
+        font-size: 1.08rem;
+        color: #fff7ed;
     }
     
     .menu-price {
         font-weight: 700;
-        color: #d4a373;
-        background: rgba(212, 163, 115, 0.15);
-        padding: 2px 10px;
+        color: #e0a96d;
+        background: rgba(224, 169, 109, 0.15);
+        padding: 3px 12px;
         border-radius: 12px;
-        font-size: 0.9rem;
+        font-size: 0.92rem;
+        border: 1px solid rgba(224, 169, 109, 0.25);
     }
     
     .menu-desc {
-        font-size: 0.85rem;
-        color: #bfa893;
-        margin-bottom: 6px;
+        font-size: 0.86rem;
+        color: #baaa9b;
+        margin-bottom: 10px;
+        line-height: 1.4;
     }
     
     .badge {
         display: inline-block;
-        padding: 2px 8px;
+        padding: 3px 9px;
         border-radius: 6px;
         font-size: 0.72rem;
         font-weight: 600;
-        margin-right: 4px;
-        text-transform: lowercase;
+        margin-right: 5px;
+        margin-bottom: 4px;
     }
     
-    .badge-hot { background: rgba(235, 94, 85, 0.2); color: #ff8b84; border: 1px solid rgba(235, 94, 85, 0.4); }
-    .badge-cold { background: rgba(84, 160, 255, 0.2); color: #82c0ff; border: 1px solid rgba(84, 160, 255, 0.4); }
-    .badge-allergen { background: rgba(255, 177, 66, 0.2); color: #ffd175; border: 1px solid rgba(255, 177, 66, 0.4); }
-    .badge-safe { background: rgba(46, 213, 115, 0.2); color: #7bed9f; border: 1px solid rgba(46, 213, 115, 0.4); }
+    .badge-hot { background: rgba(239, 68, 68, 0.18); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .badge-cold { background: rgba(59, 130, 246, 0.18); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+    .badge-allergen { background: rgba(245, 158, 11, 0.18); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.35); }
+    .badge-safe { background: rgba(34, 197, 94, 0.18); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.35); }
 
-    /* Quick Suggestion Pills */
+    /* Buttons & Interactive Elements */
     .stButton > button {
-        background: rgba(212, 163, 115, 0.12);
-        color: #fefae0;
-        border: 1px solid rgba(212, 163, 115, 0.3);
-        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(224, 169, 109, 0.12) 0%, rgba(140, 95, 58, 0.18) 100%);
+        color: #fff7ed;
+        border: 1px solid rgba(224, 169, 109, 0.3);
+        border-radius: 12px;
         font-weight: 500;
-        transition: all 0.2s ease;
+        transition: all 0.2s ease-in-out;
         width: 100%;
         text-align: left;
-        padding: 8px 14px;
+        padding: 10px 16px;
     }
     
     .stButton > button:hover {
-        background: rgba(212, 163, 115, 0.25);
-        border-color: #d4a373;
+        background: linear-gradient(135deg, rgba(224, 169, 109, 0.25) 0%, rgba(140, 95, 58, 0.35) 100%);
+        border-color: #e0a96d;
         color: #ffffff;
-        transform: scale(1.01);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(224, 169, 109, 0.2);
+    }
+
+    /* Sidebar Styling */
+    section[data-testid="stSidebar"] {
+        background-color: #120e0b;
+        border-right: 1px solid rgba(224, 169, 109, 0.15);
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Load Menu for Sidebar Preview
+# Load Menu
 @st.cache_data
 def load_menu():
     try:
@@ -149,16 +195,27 @@ def load_menu():
 
 menu_items = load_menu()
 
-# Environment / API Key setup check
+# API Key & Environment Checks
 api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
 use_vertex = os.environ.get("GOOGLE_GENAI_USE_VERTEXAI", "").lower() in ("true", "1")
 
-# Sidebar Implementation
+# Sidebar - Live Interactive Menu & Configuration
 with st.sidebar:
-    st.markdown("### ☕ Menu Overview")
-    st.caption("Live source of truth for pricing & allergens")
+    st.markdown("<h2 style='font-family: Outfit; font-size: 1.4rem; color: #e0a96d; margin-bottom: 0;'>☕ Menu & Allergen Guide</h2>", unsafe_allow_html=True)
+    st.caption("Live source of truth for prices and allergens")
     
-    for item in menu_items:
+    # Filter Tabs & Search
+    search_query = st.text_input("🔍 Search menu items...", placeholder="e.g. Chai, Cold Brew, Milk-free")
+    
+    filtered_items = menu_items
+    if search_query:
+        sq = search_query.lower()
+        filtered_items = [
+            i for i in menu_items 
+            if sq in i["name"].lower() or sq in i["description"].lower() or any(sq in t.lower() for t in i.get("tags", []))
+        ]
+
+    for item in filtered_items:
         tags_html = ""
         for tag in item.get("tags", []):
             b_class = "badge-hot" if tag == "hot" else ("badge-cold" if tag == "cold" else "badge-safe")
@@ -182,7 +239,7 @@ with st.sidebar:
         """, unsafe_allow_html=True)
         
     st.markdown("---")
-    st.markdown("### ⚙️ Settings")
+    st.markdown("<h3 style='font-family: Outfit; font-size: 1.1rem; color: #e0a96d;'>⚙️ Configuration</h3>", unsafe_allow_html=True)
     if not api_key and not use_vertex:
         user_key = st.text_input("Gemini API Key", type="password", help="Enter your Google Gemini API key.")
         if user_key:
@@ -196,13 +253,19 @@ with st.sidebar:
 # Main Header Banner
 st.markdown("""
 <div class="hero-banner">
-    <h1 class="hero-title">☕🫖 Desi AI Barista</h1>
-    <div class="hero-subtitle">Authentic Indian Coffee & Chai House Powered by Google ADK & Vector RAG</div>
+    <div>
+        <h1 class="hero-title">☕🫖 Desi AI Barista</h1>
+        <div class="hero-subtitle">Authentic Indian Coffee & Chai House • Powered by Google ADK & Vector RAG</div>
+    </div>
+    <div class="status-badge">
+        <div class="pulse-dot"></div>
+        <span>Cafe Open & Ready</span>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
 # Quick Suggestion Chips
-st.markdown("##### 💡 Quick Suggestions:")
+st.markdown("<h5 style='font-family: Outfit; color: #e0a96d; margin-bottom: 12px;'>💡 Quick Recommendation Prompts:</h5>", unsafe_allow_html=True)
 col1, col2, col3, col4 = st.columns(4)
 
 selected_prompt = None
@@ -218,7 +281,6 @@ with col3:
 with col4:
     if st.button("🥛 Kesar Badam Milk"):
         selected_prompt = "Recommend a rich traditional Indian sweet drink."
-
 
 # Session State Initialization
 if "runner" not in st.session_state:
@@ -280,7 +342,7 @@ if user_input:
         return response_text
 
     with st.chat_message("assistant", avatar="☕"):
-        with st.spinner("Searching coffee knowledge & checking menu..."):
+        with st.spinner("Searching coffee knowledge & verifying menu..."):
             try:
                 response = asyncio.run(get_response())
             except Exception as e:
